@@ -24,11 +24,11 @@ def name():
 def description():
     return "Dockable SQL editor with code highlighting that adds query layers"
 def version():
-    return "Version 0.1"
+    return "Version 0.2.2"
 def icon():
     return "icon.png"
 def qgisMinimumVersion():
-    return "1.0"
+    return "1.6"
 def classFactory(iface):
     # load PostgisLayer class from file PostgisLayer
     from postgislayer import PostgisLayer
