@@ -44,8 +44,9 @@ class PostgisLayer:
         self.dock = uic.loadUi(os.path.join(path, "ui_postgislayer.ui"))
         self.iface.addDockWidget(Qt.BottomDockWidgetArea, self.dock)        
         #Add toolbar button and menu item
+        
+        self.iface.addPluginDatabaseMenu("&Fast SQL Layer", self.action)
         #self.iface.addToolBarIcon(self.action)
-        self.iface.addPluginToMenu("&Fast SQL Layer", self.action)
         
         #connect the action to the run method
         QObject.connect(self.dock.buttonRun, SIGNAL('clicked()'), self.run)        
@@ -67,8 +68,9 @@ class PostgisLayer:
         self.higlight_text = hl.Highlighter(self.dock.textQuery.document(), "sql")
     def unload(self):
         # Remove the plugin menu item and icon
-        self.iface.removePluginMenu("&PostgisLayer", self.action)
-        self.iface.removeToolBarIcon(self.action)
+        self.iface.removePluginDatabaseMenu("&Fast SQL Layer", self.action)
+        
+        #self.iface.removeToolBarIcon(self.action)
 
     # run method that performs all the real work
     def run(self):
@@ -81,7 +83,7 @@ class PostgisLayer:
 		uri = self.db.getURI()
 		query = str(self.dock.textQuery.toPlainText())
 		
-		#replace layer
+		#replace layer (not working)
 		if self.dock.layerCombo.currentText() == 'replace layer':
 				layer = self.iface.activeLayer()
 				try: layer.actionRemoveLayer()

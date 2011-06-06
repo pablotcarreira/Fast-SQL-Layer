@@ -28,7 +28,7 @@ def version():
 def icon():
     return "icon.png"
 def qgisMinimumVersion():
-    return "1.6"
+    return "1.7"
 def classFactory(iface):
     # load PostgisLayer class from file PostgisLayer
     from postgislayer import PostgisLayer
