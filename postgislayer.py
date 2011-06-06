@@ -39,18 +39,22 @@ class PostgisLayer:
     def initGui(self):
         # Create action that will start plugin configuration
         self.action = QAction(QIcon(":/plugins/postgislayer/icon.png"), "Fast SQL Layer", self.iface.mainWindow())
+        #Add toolbar button and menu item
+        self.iface.addPluginToDatabaseMenu("&Fast SQL Layer", self.action)
+        #self.iface.addToolBarIcon(self.action)
+        
+        
         #load the form  
         path = os.path.dirname(os.path.abspath(__file__))
         self.dock = uic.loadUi(os.path.join(path, "ui_postgislayer.ui"))
         self.iface.addDockWidget(Qt.BottomDockWidgetArea, self.dock)        
-        #Add toolbar button and menu item
         
-        self.iface.addPluginDatabaseMenu("&Fast SQL Layer", self.action)
-        #self.iface.addToolBarIcon(self.action)
         
         #connect the action to the run method
+        QObject.connect(self.action, SIGNAL("triggered()"), self.show)
         QObject.connect(self.dock.buttonRun, SIGNAL('clicked()'), self.run)        
         QObject.connect(self.dock.buttonGet, SIGNAL('clicked()'), self.get)
+        
         #populate the combo with connections
         actions = conn.getAvailableConnections()
         self.actionsDb = {}
@@ -58,21 +62,28 @@ class PostgisLayer:
         	self.actionsDb[ unicode(a.text()) ] = a
         for i in self.actionsDb:
         	self.dock.comboConnections.addItem(i)
+        
         #populate the id and the_geom combos
         self.dock.uniqueCombo.addItem('id')
         self.dock.geomCombo.addItem('the_geom')
+        
         #populate the replace layer_combo
         self.dock.layerCombo.addItem('add layer')
         self.dock.layerCombo.addItem('replace layer')
+        
         #start the highlight engine
         self.higlight_text = hl.Highlighter(self.dock.textQuery.document(), "sql")
+        
+    def show(self):
+        self.iface.addDockWidget(Qt.BottomDockWidgetArea, self.dock)
+    
     def unload(self):
         # Remove the plugin menu item and icon
         self.iface.removePluginDatabaseMenu("&Fast SQL Layer", self.action)
         
         #self.iface.removeToolBarIcon(self.action)
 
-    # run method that performs all the real work
+    
     def run(self):
 		QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
 		
@@ -93,9 +104,9 @@ class PostgisLayer:
 		vl = self.iface.addVectorLayer(uri.uri(), "QueryLayer", self.db.getProviderName())
 		
 		QApplication.restoreOverrideCursor()
+    
     def get(self):
         layer = self.iface.activeLayer()
-        
         if hasattr(layer, 'type') and layer.type()==0:
             dataprovider=layer.dataProvider()
             uri2=str(dataprovider.dataSourceUri())
@@ -104,21 +115,5 @@ class PostgisLayer:
             #text='{table}'.format(text) 
             #self.higlight_text.rehighlight()
             self.dock.textQuery.setPlainText(text)
-            
         else: QMessageBox.warning(self.dock,'Error','Please select a vector layer',1,0)
-            
-        
-            
-        
     
-				
-				
-				
-				
-
-				
-
-		
-		
-		
-		
