@@ -101,8 +101,11 @@ class PostgisLayer:
 				layer = self.iface.activeLayer()
 				try: layer.actionRemoveLayer()
 				except: pass
+
 		#lstrip() is needed to remove spaces in the first line.
-		uri.setDataSource("", "(" + query.lstrip() + ")", geomFieldName, "", uniqueFieldName)
+                query = query.lstrip()
+                query = query.replace(';','')
+		uri.setDataSource("", "(" + query + ")", geomFieldName, "", uniqueFieldName)
 		vl = self.iface.addVectorLayer(uri.uri(), "QueryLayer", self.db.getProviderName())
 		
 		QApplication.restoreOverrideCursor()
