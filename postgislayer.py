@@ -63,9 +63,11 @@ class PostgisLayer:
         for i in self.actionsDb:
         	self.dock.comboConnections.addItem(i)
         
-        #populate the id and the_geom combos
+        #populate the gid/id and the_geom/geom combos
         self.dock.uniqueCombo.addItem('id')
+        self.dock.uniqueCombo.addItem('gid')
         self.dock.geomCombo.addItem('the_geom')
+        self.dock.geomCombo.addItem('geom')
         
         #populate the replace layer_combo
         self.dock.layerCombo.addItem('add layer')
