@@ -63,9 +63,11 @@ class PostgisLayer:
         for i in self.actionsDb:
         	self.dock.comboConnections.addItem(i)
         
-        #populate the id and the_geom combos
+        #populate the gid/id and the_geom/geom combos
         self.dock.uniqueCombo.addItem('id')
+        self.dock.uniqueCombo.addItem('gid')
         self.dock.geomCombo.addItem('the_geom')
+        self.dock.geomCombo.addItem('geom')
         
         #populate the replace layer_combo
         self.dock.layerCombo.addItem('add layer')
@@ -99,8 +101,11 @@ class PostgisLayer:
 				layer = self.iface.activeLayer()
 				try: layer.actionRemoveLayer()
 				except: pass
+
 		#lstrip() is needed to remove spaces in the first line.
-		uri.setDataSource("", "(" + query.lstrip() + ")", geomFieldName, "", uniqueFieldName)
+                query = query.lstrip()
+                query = query.replace(';','')
+		uri.setDataSource("", "(" + query + ")", geomFieldName, "", uniqueFieldName)
 		vl = self.iface.addVectorLayer(uri.uri(), "QueryLayer", self.db.getProviderName())
 		
 		QApplication.restoreOverrideCursor()
