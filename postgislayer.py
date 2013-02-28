@@ -94,7 +94,7 @@ class PostgisLayer:
 		uniqueFieldName = self.dock.uniqueCombo.currentText()
 		geomFieldName = self.dock.geomCombo.currentText()
 		uri = self.db.getURI()
-		query = str(self.dock.textQuery.toPlainText())
+		query = unicode(self.dock.textQuery.toPlainText())
 		
 		#replace layer (not working)
 		if self.dock.layerCombo.currentText() == 'replace layer':
@@ -114,7 +114,7 @@ class PostgisLayer:
         layer = self.iface.activeLayer()
         if hasattr(layer, 'type') and layer.type()==0:
             dataprovider=layer.dataProvider()
-            uri2=str(dataprovider.dataSourceUri())
+            uri2 = unicode(dataprovider.dataSourceUri())
             text = os.linesep.join([s for s in uri2.splitlines() if s])
             #still not avaliable in py 2.5
             #text='{table}'.format(text) 
