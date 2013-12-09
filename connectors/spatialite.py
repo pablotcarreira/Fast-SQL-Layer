@@ -79,7 +79,7 @@ class Connection(DbConn.Connection):
 		if not settings.contains( "sqlitepath" ): # non-existent entry?
 			raise DbError( 'there is no defined database connection "%s".' % selected )
 
-		database = unicode(settings.value("sqlitepath"))
+		database = settings.value("sqlitepath")
 
 		uri = qgis.core.QgsDataSourceURI()
 		uri.setDatabase(database)
