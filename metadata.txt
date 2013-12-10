@@ -10,11 +10,11 @@
 
 [general]
 name=Fast SQL layer
-qgisMinimumVersion=1.7
+qgisMinimumVersion=2.0
 description=Dockable SQL editor with code highlighting that adds query layers
-version=0.2.4
-author=Pablo Carreira
-email=pablotcarreira@gmail.com
+version=0.2.5
+author=Ronald Mulder
+email=ronald@mulderrienks.nl
 
 # end of mandatory metadata
 
@@ -26,9 +26,9 @@ email=pablotcarreira@gmail.com
 # tags are comma separated with spaces allowed
 tags=vector,postgis,PostGIS-layer,SQL
 
-homepage=https://github.com/pablotcarreira/Fast-SQL-Layer
-tracker=https://github.com/pablotcarreira/Fast-SQL-Layer/issues
-repository=https://github.com/pablotcarreira/Fast-SQL-Layer
+homepage=https://github.com/Ronald-Mulder/Fast-SQL-Layer
+tracker=https://github.com/Ronald-Mulder/Fast-SQL-Layer/issues
+repository=https://github.com/Ronald-Mulder/Fast-SQL-Layer
 icon=icon.png
 # experimental flag
 experimental=False

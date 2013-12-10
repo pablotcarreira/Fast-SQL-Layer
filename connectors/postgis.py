@@ -117,11 +117,11 @@ class Connection(DbConn.Connection):
 		if not settings.contains( "database" ): # non-existent entry?
 			raise DbError( 'there is no defined database connection "%s".' % selected )
 	
-		get_value_str = lambda x: unicode(settings.value(x).toString())
+		get_value_str = lambda x: unicode(settings.value(x))
 		host, port, database, username, password = map(get_value_str, ["host", "port", "database", "username", "password"])
 
 		# qgis1.5 use 'savePassword' instead of 'save' setting
-		if not ( settings.value("save").toBool() or settings.value("savePassword").toBool() ):
+		if not ( settings.value("save") or settings.value("savePassword") ):
 			(password, ok) = QInputDialog.getText(parent, "Enter password", 'Enter password for connection "%s":' % selected, QLineEdit.Password)
 			if not ok: return
 

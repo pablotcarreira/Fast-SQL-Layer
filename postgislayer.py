@@ -66,8 +66,9 @@ class PostgisLayer:
         #populate the gid/id and the_geom/geom combos
         self.dock.uniqueCombo.addItem('id')
         self.dock.uniqueCombo.addItem('gid')
-        self.dock.geomCombo.addItem('the_geom')
         self.dock.geomCombo.addItem('geom')
+        self.dock.geomCombo.addItem('the_geom')
+
         
         #populate the replace layer_combo
         self.dock.layerCombo.addItem('add layer')

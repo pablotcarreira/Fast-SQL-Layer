@@ -19,16 +19,7 @@
  ***************************************************************************/
  This script initializes the plugin, making it known to QGIS.
 """
-def name():
-    return "Fast SQL layer"
-def description():
-    return "Dockable SQL editor with code highlighting that adds query layers"
-def version():
-    return "Version 0.2.3"
-def icon():
-    return "icon.png"
-def qgisMinimumVersion():
-    return "1.7"
+
 def classFactory(iface):
     # load PostgisLayer class from file PostgisLayer
     from postgislayer import PostgisLayer
