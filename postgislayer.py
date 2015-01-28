@@ -1,4 +1,4 @@
-﻿"""
+"""
 /***************************************************************************
  Fast SQL Layer
                                  A QGIS plugin
@@ -54,21 +54,22 @@ class PostgisLayer:
         QObject.connect(self.action, SIGNAL("triggered()"), self.show)
         QObject.connect(self.dock.buttonRun, SIGNAL('clicked()'), self.run)        
         QObject.connect(self.dock.buttonGet, SIGNAL('clicked()'), self.get)
+        QObject.connect(self.dock.buttonRefreshConnections, SIGNAL('clicked()'), self.refresh)
+
+        # Set an icon on the refresh button
+        self.dock.buttonRefreshConnections.setIcon(QIcon(':/plugins/postgislayer/refresh.png'));
+ 
+        # set a fixed font in the query editor, makes it easier to read
+        self.dock.textQuery.document().setDefaultFont(QFont('Lucida Console', 9));
         
         #populate the combo with connections
-        actions = conn.getAvailableConnections()
-        self.actionsDb = {}
-        for a in actions:
-        	self.actionsDb[ unicode(a.text()) ] = a
-        for i in self.actionsDb:
-        	self.dock.comboConnections.addItem(i)
+        self.refresh()
         
         #populate the gid/id and the_geom/geom combos
         self.dock.uniqueCombo.addItem('id')
         self.dock.uniqueCombo.addItem('gid')
         self.dock.geomCombo.addItem('geom')
         self.dock.geomCombo.addItem('the_geom')
-
         
         #populate the replace layer_combo
         self.dock.layerCombo.addItem('add layer')
@@ -83,33 +84,51 @@ class PostgisLayer:
     def unload(self):
         # Remove the plugin menu item and icon
         self.iface.removePluginDatabaseMenu("&Fast SQL Layer", self.action)
-        
         #self.iface.removeToolBarIcon(self.action)
-
+   
+    
+    def refresh(self):
+      #(re)populate the combo with connections
+      actions = conn.getAvailableConnections()
+      self.actionsDb = {}
+      self.dock.comboConnections.clear()
+      for a in actions:
+        self.actionsDb[ unicode(a.text()) ] = a
+        self.dock.comboConnections.addItem(QIcon(':/plugins/postgislayer/' + a.getTypeName() + '.png'), a.text())
     
     def run(self):
-		QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-		
-		dados = str(self.dock.comboConnections.currentText())
-		self.db = self.actionsDb[dados].connect()
-		uniqueFieldName = self.dock.uniqueCombo.currentText()
-		geomFieldName = self.dock.geomCombo.currentText()
-		uri = self.db.getURI()
-		query = unicode(self.dock.textQuery.toPlainText())
-		
-		#replace layer (not working)
-		if self.dock.layerCombo.currentText() == 'replace layer':
-				layer = self.iface.activeLayer()
-				try: layer.actionRemoveLayer()
-				except: pass
+      QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+      
+      dados = str(self.dock.comboConnections.currentText())
+      self.db = self.actionsDb[dados].connect()
+      uniqueFieldName = self.dock.uniqueCombo.currentText()
+      geomFieldName = self.dock.geomCombo.currentText()
+      uri = self.db.getURI()
+      query = unicode(self.dock.textQuery.toPlainText())
+      
+      #replace layer (not working)
+      if self.dock.layerCombo.currentText() == 'replace layer':
+        layer = self.iface.activeLayer()
+        try: 
+          layer.actionRemoveLayer()
+          
+          
+        except: 
+          pass
 
-		#lstrip() is needed to remove spaces in the first line.
-                query = query.lstrip()
-                query = query.replace(';','')
-		uri.setDataSource("", "(" + query + ")", geomFieldName, "", uniqueFieldName)
-		vl = self.iface.addVectorLayer(uri.uri(), "QueryLayer", self.db.getProviderName())
-		
-		QApplication.restoreOverrideCursor()
+      #lstrip() is needed to remove spaces in the first line.
+      query = query.lstrip()
+      query = query.replace(';','')
+      uri.setDataSource("", "(" + query + ")", geomFieldName, "", uniqueFieldName)
+      
+      
+      
+      try:
+        vl = self.iface.addVectorLayer(uri.uri(), self.dock.txtName.displayText(), self.db.getProviderName())
+      except BaseException as ex:
+        QMessageBox.information(None, "DEBUG:", ex.strerror)
+      
+      QApplication.restoreOverrideCursor()
     
     def get(self):
         layer = self.iface.activeLayer()
@@ -120,6 +139,19 @@ class PostgisLayer:
             #still not avaliable in py 2.5
             #text='{table}'.format(text) 
             #self.higlight_text.rehighlight()
-            self.dock.textQuery.setPlainText(text)
-        else: QMessageBox.warning(self.dock,'Error','Please select a vector layer',1,0)
+            
+            
+            # Get query from uri
+            sStartKey = 'table="('
+            iStart = uri2.find(sStartKey)
+            if iStart > 0:
+              iEnd = uri2.find(')" (', iStart)
+              sql = uri2[iStart + len(sStartKey):iEnd]
+              sql = sql.decode('unicode_escape') 
+              self.dock.textQuery.setPlainText(sql)
+            else:
+              self.dock.textQuery.setPlainText(text)
+              
+        else: 
+          QMessageBox.warning(self.dock,'Error','Please select a vector layer',1,0)
     

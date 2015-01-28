@@ -1,5 +1,17 @@
 <RCC>
-    <qresource prefix="/plugins/postgislayer" >
-        <file>icon.png</file>
-    </qresource>
+  <qresource prefix="/plugins/postgislayer" >
+    <file>icon.png</file>
+  </qresource>
+  <qresource prefix="/plugins/postgislayer" >
+     <file>refresh.png</file>
+   </qresource>
+  <qresource prefix="/plugins/postgislayer" >
+     <file>connection.png</file>
+   </qresource>
+  <qresource prefix="/plugins/postgislayer" >
+     <file>postgis.png</file>
+   </qresource>
+  <qresource prefix="/plugins/postgislayer" >
+     <file>spatialite.png</file>
+   </qresource>
 </RCC>

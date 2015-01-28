@@ -12,8 +12,8 @@
 name=Fast SQL layer
 qgisMinimumVersion=2.0
 description=Dockable SQL editor with code highlighting that adds query layers
-version=0.2.5
-author=Ronald Mulder
+version=0.2.6
+author=Ronald Mulder & Pablo Torres Carreira
 email=ronald@mulderrienks.nl
 
 # end of mandatory metadata
